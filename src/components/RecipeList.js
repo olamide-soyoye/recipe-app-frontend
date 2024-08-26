@@ -29,16 +29,16 @@ const RecipeList = () => {
 
         const sortedRecipes = response.data.data.sort((a, b) => b.id - a.id);
 
-        setRecipes(sortedRecipes); // Set sorted recipes
+        setRecipes(sortedRecipes); 
         setTotalPages(response.data.pagination.totalPages);
       } catch (error) {
         toast.error("Opps something went wrong");
       }
-      setLoading(false); // Hide loader
+      setLoading(false);
     };
 
     fetchRecipes();
-  }, [page, refreshKey]); // Add refreshKey to the dependency array
+  }, [page, refreshKey]); 
 
   const handleValueChange = (newValue) => {
     setFilterValue(newValue.toLowerCase());
@@ -49,7 +49,7 @@ const RecipeList = () => {
   };
 
   const handlePageChange = (number) => {
-    setLoading(true); // Show loader when changing page
+    setLoading(true);
     setPage(number);
   };
 

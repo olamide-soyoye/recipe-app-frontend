@@ -7,10 +7,10 @@ const RecipeDetailPage = () => {
   const { id } = useParams();
   const [recipe, setRecipe] = useState({
     id: 1,
-    title: "garri",
+    title: "pasta",
     instructions: "A delicious pasta thingsww...",
-    ingredients: JSON.stringify(["pasta rice", "tomato sauce"]), // Example of JSON stringified array
-    image: "/assets/img/receipe_prepare.jpg",
+    ingredients: JSON.stringify(["pasta rice", "tomato sauce"]), 
+    // image: "/assets/img/receipe_prepare.jpg",
   });
 
   useEffect(() => {
@@ -41,9 +41,9 @@ const RecipeDetailPage = () => {
 
   return (
     <Container>
-      <Card className="recipe-card">
+      <Card className="mt-5 p-5">
         <Card.Title>
-          <h3>
+          <h3 className="">
             &nbsp;&nbsp;&nbsp;
             <span className="text-info text-capitalize">
               {recipe.title}

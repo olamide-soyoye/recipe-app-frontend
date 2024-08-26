@@ -49,8 +49,7 @@ const RecipeCard = ({ recipe, refreshPage }) => {
           ) : (
             <Card.Img
               variant="top"
-              src="https://via.placeholder.com/50x50?text=1x1
-" // Make sure this path is correct
+              src="https://via.placeholder.com/50x50?text=1x1"
               alt={recipe.title}
               className="card-img-top"
               style={{ height: "200px", width: "325px", objectFit: "cover" }}
@@ -60,10 +59,7 @@ const RecipeCard = ({ recipe, refreshPage }) => {
             <Card.Title>
               <h3>{recipe.title}</h3>
             </Card.Title>
-            {/* <Card.Text>
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </Card.Text> */}
+            
             <Link variant="primary" to={`/recipe/${recipe.id}`}>
               View
             </Link>
