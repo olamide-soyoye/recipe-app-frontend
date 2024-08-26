@@ -34,6 +34,10 @@ const RecipeDetailPage = () => {
     fetchRecipe();
   }, [id]);
 
+  const handleBackClick = () => {
+    window.history.back();
+  }
+
   // Ensure ingredients are an array
   const ingredientsList = Array.isArray(recipe.ingredients)
     ? recipe.ingredients
@@ -93,6 +97,8 @@ const RecipeDetailPage = () => {
                   <li key={index}>{ingredient}</li>
                 ))}
               </ul>
+              <button className="btn btn-secondary mt-5" onClick={handleBackClick}>Back</button>
+
             </Col>
           </Row>
         </Card.Body>
