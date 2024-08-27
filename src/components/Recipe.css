@@ -10,6 +10,11 @@
     height: 25rem !important;
 }
 
+.image_size{
+    width: 100% !important;
+    height: 75% !important;
+}
+
 @media (max-width: 576px) {
 
     /* For small screens */

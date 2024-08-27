@@ -21,7 +21,7 @@ const RecipeList = () => {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      setLoading(true); // Show loader
+      setLoading(true);
       try {
         const response = await axiosInstance.get(
           `/api/recipes?page=${page}&limit=${20}`
@@ -58,7 +58,6 @@ const RecipeList = () => {
     return title.toLowerCase().includes(filterValue);
   });
 
-  // Create pagination items dynamically based on the total number of pages
   let items = [];
   for (let number = 1; number <= totalPages; number++) {
     items.push(

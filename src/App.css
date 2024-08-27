@@ -47,6 +47,12 @@
   margin-top: 20px;
 }
 
+.resize_image{
+  width: 100% !important;
+  height: 330px !important;
+  object-fit: cover !important;
+}
+
 
 @keyframes App-logo-spin {
   from {

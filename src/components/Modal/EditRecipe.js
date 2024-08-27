@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
-import TextField from "../inputs/Textbox"; // Ensure this component is correct
+import TextField from "../inputs/Textbox"; 
 import axiosInstance from "../../hooks/axiosInstance";
 import { toast } from "react-toastify";
 
@@ -9,10 +9,11 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
     id: "",
     title: "",
     instruction: "",
-    ingredients: [{ ingredient: "" }],
-    image: null,
+    image: "",
+    ingredients: [{ id: Date.now(), ingredient: "" }]
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [preview, setPreview] = useState(null);
 
   useEffect(() => {
     if (recipe) {
@@ -27,30 +28,33 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
       } else if (Array.isArray(recipe.ingredients)) {
         parsedIngredients = recipe.ingredients;
       }
-
       setFormState({
         id: recipe.id || "",
         title: recipe.title || "",
         instruction: recipe.instructions || "",
-        ingredients: parsedIngredients.map((ingredient) => ({ ingredient })),
-        image: null,
+        image: recipe?.image,
+        ingredients: parsedIngredients.map((ingredient) => ({
+          id: Date.now() + Math.random(), 
+          ingredient,
+        })),
       });
     }
   }, [recipe]);
 
-  const [preview, setPreview] = useState(null);
-
   const addIngredient = () => {
     setFormState((prevState) => ({
       ...prevState,
-      ingredients: [...prevState.ingredients, { ingredient: "" }],
+      ingredients: [
+        ...prevState.ingredients,
+        { id: Date.now() + Math.random(), ingredient: "" }, 
+      ],
     }));
   };
 
-  const removeIngredient = (index) => {
+  const removeIngredient = (id) => {
     setFormState((prevState) => ({
       ...prevState,
-      ingredients: prevState.ingredients.filter((_, i) => i !== index),
+      ingredients: prevState.ingredients.filter((ingredient) => ingredient.id !== id),
     }));
   };
 
@@ -72,10 +76,16 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
     }));
   };
 
-  const handleIngredientChange = (index, value) => {
+  const handleCloseModal = () => {
+    closeModal();
+    setPreview('');
+  };
+
+  const handleIngredientChange = (id, value) => {
     setFormState((prevState) => {
-      const newIngredients = [...prevState.ingredients];
-      newIngredients[index] = { ingredient: value };
+      const newIngredients = prevState.ingredients.map((ingredient) =>
+        ingredient.id === id ? { ...ingredient, ingredient: value } : ingredient
+      );
       return {
         ...prevState,
         ingredients: newIngredients,
@@ -107,7 +117,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
         data
       );
       toast.success(response.data.message);
-      closeModal();
+      handleCloseModal();
       refreshPage();
     } catch (error) {
       toast.error(error.response.data.message);
@@ -117,7 +127,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
   };
 
   return (
-    <Modal show={show} onHide={closeModal} size="lg">
+    <Modal show={show} onHide={handleCloseModal} size="lg">
       <Modal.Header closeButton>
         <Modal.Title>Edit Recipe</Modal.Title>
       </Modal.Header>
@@ -130,11 +140,10 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
                   <img
                     src={preview}
                     alt="Selected"
-                    style={{ maxWidth: "100%", height: "auto" }}
+                    className="resize_image"
                   />
                 </div>
               )}
-              {/* Use Form.Control directly for file input */}
               <Form.Group>
                 <Form.Control
                   type="file"
@@ -178,16 +187,16 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
                     </Button>
                   )}
                 </div>
-                {formState.ingredients.map((ingredient, index) => (
-                  <Row key={index} className="mb-3 mt-3">
+                {formState.ingredients.map((ingredient) => (
+                  <Row key={ingredient.id} className="mb-3 mt-3">
                     <Col lg={10} md={10}>
                       <TextField
-                        title={`Ingredient ${index + 1}`}
-                        name={`ingredient-${index}`}
+                        title={`Ingredient ${formState.ingredients.indexOf(ingredient) + 1}`}
+                        name={`ingredient-${ingredient.id}`}
                         required
                         value={ingredient.ingredient}
                         onValueChange={(value) =>
-                          handleIngredientChange(index, value)
+                          handleIngredientChange(ingredient.id, value)
                         }
                       />
                     </Col>
@@ -195,7 +204,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
                       {formState.ingredients.length > 1 && (
                         <Button
                           variant="outline-danger"
-                          onClick={() => removeIngredient(index)}
+                          onClick={() => removeIngredient(ingredient.id)}
                         >
                           X Remove
                         </Button>
@@ -207,7 +216,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
             </Col>
           </Row>
           <Modal.Footer>
-            <Button variant="secondary" onClick={closeModal} type="button">
+            <Button variant="secondary" onClick={handleCloseModal} type="button">
               Close
             </Button>
             <Button variant="success" type="submit" disabled={isLoading}>

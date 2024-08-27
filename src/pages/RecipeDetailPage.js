@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axiosInstance from "../hooks/axiosInstance";
 import { Card, Container, Row, Col } from "react-bootstrap";
+import { Dimmer, Loader } from "semantic-ui-react";
+
 
 const RecipeDetailPage = () => {
   const { id } = useParams();
@@ -12,14 +14,17 @@ const RecipeDetailPage = () => {
     ingredients: JSON.stringify(["pasta rice", "tomato sauce"]), 
     // image: "/assets/img/receipe_prepare.jpg",
   });
+  const [loading, setLoading] = useState(false);
+
 
   useEffect(() => {
+    setLoading(true);
     const fetchRecipe = async () => {
       try {
         const response = await axiosInstance.get(`/api/recipes/${id}`);
         const fetchedRecipe = response.data.data;
+        setLoading(false);
 
-        // Ensure ingredients are parsed from JSON string to an array
         if (typeof fetchedRecipe.ingredients === "string") {
           fetchedRecipe.ingredients = JSON.parse(fetchedRecipe.ingredients);
         }
@@ -28,6 +33,7 @@ const RecipeDetailPage = () => {
         console.log(fetchedRecipe, 33);
       } catch (error) {
         console.error("Error fetching recipe details:", error);
+        setLoading(false);
       }
     };
 
@@ -38,14 +44,16 @@ const RecipeDetailPage = () => {
     window.history.back();
   }
 
-  // Ensure ingredients are an array
   const ingredientsList = Array.isArray(recipe.ingredients)
     ? recipe.ingredients
     : [];
 
   return (
     <Container>
-      <Card className="mt-5 p-5">
+      <Dimmer active={loading} inverted>
+          <Loader>Loading</Loader>
+        </Dimmer>
+      <Card className="mt-5 p-5" style={{height: '700px'}}>
         <Card.Title>
           <h3 className="">
             &nbsp;&nbsp;&nbsp;
@@ -58,21 +66,14 @@ const RecipeDetailPage = () => {
         <Card.Body>
           <Row className="justify-content-md-center mb-3">
             <Col xs="12" lg="6" sm="12" className="mb-4">
-              {recipe.image ? (
+            
                 <Card.Img
                   variant="top"
                   src={recipe.image}
                   alt={recipe.title}
-                  className="card-img-top"
+                  className="card-img-top resize_image" 
                 />
-              ) : (
-                <Card.Img
-                  variant="top"
-                  src="/assets/img/blue_razz.jpg"
-                  alt={recipe.title}
-                  className="card-img-top"
-                />
-              )}
+
             </Col>
             <Col xs="12" lg="6" sm="12" className="">
               <Card.Text>

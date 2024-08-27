@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
-import TextField from "../inputs/Textbox"; // Assuming this works well for other inputs
+import TextField from "../inputs/Textbox";
 import axiosInstance from "../../hooks/axiosInstance";
 import { toast } from "react-toastify";
 import { Dimmer, Loader } from "semantic-ui-react";
@@ -9,35 +9,48 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
   const [formState, setFormState] = useState({
     title: "",
     instruction: "",
-    ingredients: [{ ingredient: "" }],
+    ingredients: [{ id: Date.now(), ingredient: "" }],
     image: null,
   });
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   const [preview, setPreview] = useState(null);
 
   const addIngredient = () => {
     setFormState((prevState) => ({
       ...prevState,
-      ingredients: [...prevState.ingredients, { ingredient: "" }],
+      ingredients: [
+        ...prevState.ingredients,
+        { id: Date.now() + Math.random(), ingredient: "" },
+      ],
     }));
+  };
+
+  const removeIngredient = (id) => {
+    setFormState((prevState) => ({
+      ...prevState,
+      ingredients: prevState.ingredients.filter((ingredient) => ingredient.id !== id),
+    }));
+  };
+
+  const handleCloseModal = () => {
+    setFormState({
+      title: "",
+      instruction: "",
+      ingredients: [{ id: Date.now(), ingredient: "" }],
+      image: null,
+    });
+    closeModal();
+    setPreview('');
   };
 
   const resetForm = () => {
     setFormState({
       title: "",
       instruction: "",
-      ingredients: [{ ingredient: "" }],
+      ingredients: [{ id: Date.now(), ingredient: "" }],
       image: null,
     });
-  };
-
-  const removeIngredient = (index) => {
-    setFormState((prevState) => ({
-      ...prevState,
-      ingredients: prevState.ingredients.filter((_, i) => i !== index),
-    }));
   };
 
   const handleFileChange = (event) => {
@@ -58,10 +71,11 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
     }));
   };
 
-  const handleIngredientChange = (index, value) => {
+  const handleIngredientChange = (id, value) => {
     setFormState((prevState) => {
-      const newIngredients = [...prevState.ingredients];
-      newIngredients[index].ingredient = value;
+      const newIngredients = prevState.ingredients.map((ingredient) =>
+        ingredient.id === id ? { ...ingredient, ingredient: value } : ingredient
+      );
       return {
         ...prevState,
         ingredients: newIngredients,
@@ -74,12 +88,11 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
     setIsLoading(true);
     setLoading(true);
 
-    let data = new FormData();
+    const data = new FormData();
     const ingredientsArray = formState.ingredients.map(
       (ingredientObj) => ingredientObj.ingredient
     );
 
-    // Corrected value access
     data.append("title", formState.title);
     data.append("instructions", formState.instruction);
     data.append("ingredients", JSON.stringify(ingredientsArray));
@@ -91,7 +104,7 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
     try {
       const response = await axiosInstance.post(`/api/recipes`, data);
       toast.success(response.data.message);
-      closeModal();
+      handleCloseModal();
       refreshPage();
       resetForm();
     } catch (error) {
@@ -107,7 +120,7 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
       <Dimmer active={loading} inverted>
         <Loader>Loading</Loader>
       </Dimmer>
-      <Modal show={show} onHide={closeModal} size="lg">
+      <Modal show={show} onHide={handleCloseModal} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Create Recipe</Modal.Title>
         </Modal.Header>
@@ -120,11 +133,10 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
                     <img
                       src={preview}
                       alt="Selected"
-                      style={{ maxWidth: "100%", height: "auto" }}
+                      className="resize_image"
                     />
                   </div>
                 )}
-                {/* Use Form.Control directly for file input */}
                 <Form.Group>
                   <Form.Control
                     type="file"
@@ -168,24 +180,24 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
                       </Button>
                     )}
                   </div>
-                  {formState.ingredients.map((ingredient, index) => (
-                    <Row key={index} className="mb-3 mt-3">
+                  {formState.ingredients.map((ingredient) => (
+                    <Row key={ingredient.id} className="mb-3 mt-3">
                       <Col lg={10} md={10}>
                         <TextField
-                          title={`Ingredient ${index + 1}`}
-                          name={`ingredient-${index}`}
+                          title={`Ingredient ${formState.ingredients.findIndex(ing => ing.id === ingredient.id) + 1}`}
+                          name={`ingredient-${ingredient.id}`}
                           required
                           value={ingredient.ingredient}
                           onValueChange={(value) =>
-                            handleIngredientChange(index, value)
+                            handleIngredientChange(ingredient.id, value)
                           }
                         />
                       </Col>
                       <Col lg={2} md={2} className="d-flex align-items-center">
-                        {formState.ingredients.length > 1 && index > 0 && (
+                        {formState.ingredients.length > 1 && (
                           <Button
                             variant="outline-danger"
-                            onClick={() => removeIngredient(index)}
+                            onClick={() => removeIngredient(ingredient.id)}
                           >
                             X Remove
                           </Button>
@@ -197,7 +209,7 @@ const CreateRecipe = ({ show, closeModal, refreshPage }) => {
               </Col>
             </Row>
             <Modal.Footer>
-              <Button variant="secondary" onClick={closeModal} type="button">
+              <Button variant="secondary" onClick={handleCloseModal} type="button">
                 Close
               </Button>
               <Button variant="success" type="submit" disabled={isLoading}>

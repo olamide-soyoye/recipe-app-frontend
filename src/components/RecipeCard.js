@@ -44,7 +44,7 @@ const RecipeCard = ({ recipe, refreshPage }) => {
               variant="top"
               src={recipe.image}
               alt={recipe.title}
-              className="card-img-top"
+              className="card-img-top image_size"
             />
           ) : (
             <Card.Img
