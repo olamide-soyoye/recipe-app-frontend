@@ -13,7 +13,7 @@ const carouselItems = [
   {
     src: "/assets/img/blue_razz.jpg",
     title: "Good Food Good Life",
-    description: "Just relax and will give you good food",
+    description: "Just relax and we'll give you good food",
     interval: 3000,
   },
   {

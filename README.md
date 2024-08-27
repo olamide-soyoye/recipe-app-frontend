@@ -40,5 +40,5 @@ npm  build
 
 ### Deployment URL
 ```bash
-https://recipe-app-frontend-ng4w2nevk-olamide5142gmailcoms-projects.vercel.app/
+https://recipe-app-frontend-5fng.onrender.com/
 ```
