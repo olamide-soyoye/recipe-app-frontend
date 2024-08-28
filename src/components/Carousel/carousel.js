@@ -13,8 +13,8 @@ const CarouselReuse = ({ items }) => {
             alt={item.alt || `Slide ${index + 1}`}
           />
           <Carousel.Caption>
-            <h3>{item.title || `Slide Title`}</h3>
-            <p>{item.description || `Slide Description`}</p>
+            <h3 className="carousel-text">{item.title || `Slide Title`}</h3>
+            <p className="carousel-text">{item.description || `Slide Description`}</p>
           </Carousel.Caption>
         </Carousel.Item>
       ))}

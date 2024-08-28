@@ -57,6 +57,11 @@
   height: 700px !important;
 }
 
+.carousel-text{
+  color:#fff;
+  font-weight:1000;
+}
+
 @media (max-width: 767px) {
   .card_size {
     height: auto !important;
