@@ -29,7 +29,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
         parsedIngredients = recipe.ingredients;
       }
       setFormState({
-        id: recipe.id || "",
+        id: recipe._id || "",
         title: recipe.title || "",
         instruction: recipe.instructions || "",
         image: recipe?.image,
@@ -112,6 +112,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
     }
 
     try {
+      console.log(formState)
       const response = await axiosInstance.put(
         `/api/recipes/${formState.id}`,
         data

@@ -27,8 +27,9 @@ const RecipeList = () => {
           `/api/recipes?page=${page}&limit=${20}`
         );
 
-        const sortedRecipes = response.data.data.sort((a, b) => b.id - a.id);
-
+        // const sortedRecipes = response.data.data.sort((a, b) => b.id - a._id);
+        const sortedRecipes = response.data.data.sort((a, b) => b._id.localeCompare(a._id));
+        // console.log('sortedRecipes', sortedRecipes)
         setRecipes(sortedRecipes); 
         setTotalPages(response.data.pagination.totalPages);
       } catch (error) {

@@ -60,7 +60,7 @@ const RecipeCard = ({ recipe, refreshPage }) => {
               <h3>{recipe.title}</h3>
             </Card.Title>
             
-            <Link variant="primary" to={`/recipe/${recipe.id}`}>
+            <Link variant="primary" to={`/recipe/${recipe._id}`}>
               View
             </Link>
             <Button
@@ -72,7 +72,7 @@ const RecipeCard = ({ recipe, refreshPage }) => {
             </Button>
             <Button
               variant="outline-danger"
-              onClick={() => handleDelete(recipe.id)}
+              onClick={() => handleDelete(recipe._id)}
             >
               Delete
             </Button>{" "}
