@@ -27,7 +27,7 @@ const RecipeDetailPage = () => {
         // if (typeof fetchedRecipe.ingredients === "string") {
           fetchedRecipe.ingredients = JSON.parse(fetchedRecipe.ingredients);
         // }
-        console.log(fetchedRecipe);
+        // console.log(fetchedRecipe);
 
         setRecipe(fetchedRecipe);
       } catch (error) {
