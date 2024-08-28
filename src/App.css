@@ -53,6 +53,15 @@
   object-fit: cover !important;
 }
 
+.card_size{
+  height: 700px !important;
+}
+
+@media (max-width: 767px) {
+  .card_size {
+    height: auto !important;
+  }
+}
 
 @keyframes App-logo-spin {
   from {

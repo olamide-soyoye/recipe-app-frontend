@@ -24,13 +24,12 @@ const RecipeDetailPage = () => {
         const response = await axiosInstance.get(`/api/recipes/${id}`);
         const fetchedRecipe = response.data.data;
         setLoading(false);
-
-        if (typeof fetchedRecipe.ingredients === "string") {
+        // if (typeof fetchedRecipe.ingredients === "string") {
           fetchedRecipe.ingredients = JSON.parse(fetchedRecipe.ingredients);
-        }
+        // }
+        console.log(fetchedRecipe);
 
         setRecipe(fetchedRecipe);
-        console.log(fetchedRecipe, 33);
       } catch (error) {
         console.error("Error fetching recipe details:", error);
         setLoading(false);
@@ -53,7 +52,7 @@ const RecipeDetailPage = () => {
       <Dimmer active={loading} inverted>
           <Loader>Loading</Loader>
         </Dimmer>
-      <Card className="mt-5 p-5" style={{height: '700px'}}>
+      <Card className="mt-5 p-5 card_size">
         <Card.Title>
           <h3 className="">
             &nbsp;&nbsp;&nbsp;
