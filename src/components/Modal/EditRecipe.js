@@ -18,16 +18,16 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
   useEffect(() => {
     if (recipe) {
       let parsedIngredients = [];
-      if (typeof recipe.ingredients === "string") {
-        try {
+      // if (typeof recipe.ingredients === "string") {
+      //   try {
           parsedIngredients = JSON.parse(recipe.ingredients);
-        } catch (error) {
-          console.error("Error parsing ingredients JSON:", error);
-          parsedIngredients = [];
-        }
-      } else if (Array.isArray(recipe.ingredients)) {
-        parsedIngredients = recipe.ingredients;
-      }
+        // } catch (error) {
+        //   console.error("Error parsing ingredients JSON:", error);
+        //   parsedIngredients = [];
+        // }
+      // } else if (Array.isArray(recipe.ingredients)) {
+      //   parsedIngredients = recipe.ingredients;
+      // }
       setFormState({
         id: recipe._id || "",
         title: recipe.title || "",
@@ -112,7 +112,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
     }
 
     try {
-      console.log(formState)
+      // console.log(formState)
       const response = await axiosInstance.put(
         `/api/recipes/${formState.id}`,
         data
@@ -204,6 +204,7 @@ const EditRecipe = ({ show, closeModal, recipe, refreshPage }) => {
                     <Col lg={2} md={2} className="d-flex align-items-center">
                       {formState.ingredients.length > 1 && (
                         <Button
+                          className="mobile_margin"
                           variant="outline-danger"
                           onClick={() => removeIngredient(ingredient.id)}
                         >

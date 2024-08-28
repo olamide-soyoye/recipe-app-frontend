@@ -61,6 +61,10 @@
   .card_size {
     height: auto !important;
   }
+  .mobile_margin{
+    margin-top:7px !important;
+    margin-bottom:10px !important;
+  }
 }
 
 @keyframes App-logo-spin {
