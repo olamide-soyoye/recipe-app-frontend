@@ -1,4 +1,4 @@
-# Recipe API
+# Recipe Frontend App
 
 A simple application built with React.js to manage recipes. This application supports CRUD operations, image uploads, and basic frontend validation.
 
